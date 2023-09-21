@@ -285,7 +285,6 @@ Include /etc/proftpd/conf.d/
     new_user = ServerName
     subprocess.run(["adduser", new_user])
     password = input("Masukkan password FTP server Anda: ")
-    # subprocess.run(["adduser", "--disabled-password", "--gecos", "", new_user])
     subprocess.run(["chpasswd"], input=f"{new_user}:{password}", encoding="utf-8", shell=True)
     subprocess.run(["usermod", "-aG", "sudo", new_user])
     print(f"Pengguna {new_user} berhasil ditambahkan.")
@@ -296,7 +295,27 @@ Include /etc/proftpd/conf.d/
     time.sleep(15)
 
 def install_app():
-    clearScr()
+    print(banner + """\033[1m
+   [!] Some Tools By OmTegar FTP Server [!]
+  \033[0m""")
+    print("")
+    warning_message("Starting Configuration APP UKK 2023")
+    print("")
+
+    print("CONTOH :")
+    print("RDS Mount Point : database-1.c2tochjn7qjp.us-east-1.rds.amazonaws.com")
+    print("Username RDS : admin")
+    print("Password RDS : admin123")
+    print("DNS EFS : fs-0ef13ba7dec46de8b.efs.us-east-1.amazonaws.com")
+    print("EFS id : fs-0ef13ba7dec46de8b")
+    print("")
+    print("~ Isikan dengan data yang sesuai ~ ")
+    print("")
+    RDSmountpoint = input("Masukkan RDS Mount Point Anda : ")
+    UsernameRDS = input("Masukkan Username RDS Anda : ")
+    passwordRDS = input("Masukkan Password RDS Anda : ")
+    DnsEFS = input("Masukkan DNS EFS Anda : ")
+    EFSid = input("Masukkan EFS id  Anda : ")
 
 
 def menu():
