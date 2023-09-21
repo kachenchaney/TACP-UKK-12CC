@@ -13,30 +13,6 @@ import subprocess
 
 ##########################
 
-def menu():
-    print ("""
-MIT License
-
-Copyright (c) 2023 OmTegar
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.""")
-
 os.system('clear')
 directories = ['/uploads/', '/upload/', '/files/', '/resume/', '/resumes/', '/documents/', '/docs/', '/pictures/', '/file/', '/Upload/', '/Uploads/', '/Resume/', '/Resume/', '/UsersFiles/', '/Usersiles/', '/usersFiles/', '/Users_Files/', '/UploadedFiles/',
                '/Uploaded_Files/', '/uploadedfiles/', '/uploadedFiles/', '/hpage/', '/admin/upload/', '/admin/uploads/', '/admin/resume/', '/admin/resumes/', '/admin/pictures/', '/pics/', '/photos/', '/Alumni_Photos/', '/alumni_photos/', '/AlumniPhotos/', '/users/']
@@ -47,7 +23,7 @@ yes = set(['yes', 'y', 'ye', 'Y'])
 no = set(['no', 'n'])
 
 # Directory Apps Path
-INSTALL_DIR="/usr/share/doc/TACP-V2"
+INSTALL_DIR="/usr/share/doc/TACP-UKK-12CC"
 BIN_DIR="/usr/bin/"
 
 # Set color variables
@@ -106,8 +82,8 @@ def update_tacp():
     print("This Tool is Only Available for Linux and Similar Systems. ")
     choiceupdate = input("Continue Y / N: ")
     if choiceupdate in ['Y', 'y']:
-        os.system("git clone https://github.com/OmTegar/TACP-V2.git")
-        os.system("cd TACP-V2 && sudo bash ./src/update.sh")
+        commandUpdate = f"cd {INSTALL_DIR} && sudo bash ./src/update.sh"
+        subprocess.call(commandUpdate, shell=True)
         os.system("tacp")
 
 def nginx_installed_check():
