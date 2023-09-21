@@ -23,8 +23,8 @@ yes = set(['yes', 'y', 'ye', 'Y'])
 no = set(['no', 'n'])
 
 # Directory Apps Path
-INSTALL_DIR="/usr/share/doc/TACP-UKK-12CC"
-BIN_DIR="/usr/bin/"
+INSTALL_DIR = "/usr/share/doc/TACP-UKK-12CC"
+BIN_DIR = "/usr/bin/"
 
 # Set color variables
 BLUE = "\x1b[1;34m"
@@ -33,12 +33,15 @@ RED = "\x1b[1;31m"
 YELLOW = "\x1b[1;33m"
 RESET = "\x1b[0m"
 
+
 def update_system():
-    update_status = subprocess.run(["apt-get", "update", "-y"], capture_output=True, text=True).returncode
+    update_status = subprocess.run(
+        ["apt-get", "update", "-y"], capture_output=True, text=True).returncode
 
     if update_status != 0:
         update_process = subprocess.Popen(["apt-get", "update", "-y"])
         update_process.wait()
+
 
 # Set banner text
 banner = GREEN + '''
@@ -57,16 +60,23 @@ banner = GREEN + '''
 '''
 
 # Function to print a message in green color
+
+
 def success_message(message):
     print(f"{GREEN}[*] {message}{RESET}")
 
 # Function to print a message in yellow color
+
+
 def warning_message(message):
     print(f"{YELLOW}[!] {message}{RESET}")
 
 # Function to print a message in red color
+
+
 def error_message(message):
     print(f"{RED}[X] {message}{RESET}")
+
 
 def clearScr():
     """
@@ -78,6 +88,7 @@ def clearScr():
     elif sys.platform.startswith('win'):
         os.system('cls')
 
+
 def update_tacp():
     print("This Tool is Only Available for Linux and Similar Systems. ")
     choiceupdate = input("Continue Y / N: ")
@@ -85,6 +96,7 @@ def update_tacp():
         os.system("git clone https://github.com/OmTegar/TACP-UKK-12CC.git")
         os.system("cd TACP-UKK-12CC && sudo bash ./src/update.sh")
         os.system("tacp")
+
 
 def nginx_installed_check():
     nginx_installed = subprocess.Popen(
@@ -114,6 +126,7 @@ def nginx_installed_check():
 
     subprocess.run(["service", "apache2", "start"])
 
+
 def apache_installed_check():
     apache_installed = subprocess.Popen(
         ["which", "apache2"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -141,6 +154,7 @@ def apache_installed_check():
 
     subprocess.run(["service", "nginx", "start"])
 
+
 def write_ftp_data(ServerName, port, new_user, password):
     path_ftpserver = f"{INSTALL_DIR}/ftp"
     if not os.path.exists(path_ftpserver):
@@ -162,7 +176,9 @@ def write_ftp_data(ServerName, port, new_user, password):
         file.write(" \n")
 
     subprocess.run(["cat", file_path_ftp_text])
-    success_message(f"Username dan Password Anda telah disimpan di {file_path_ftp_text}")
+    success_message(
+        f"Username dan Password Anda telah disimpan di {file_path_ftp_text}")
+
 
 def ftp_server():
     print(banner + """\033[1m
@@ -177,7 +193,8 @@ def ftp_server():
         print(banner)
         ftpserverdata = f"{INSTALL_DIR}/ftp/info.txt"
         subprocess.run(["cat", ftpserverdata], stderr=subprocess.DEVNULL)
-        print(f"Path Location File Or Directory FTP Server in {INSTALL_DIR}/ftp/")
+        print(
+            f"Path Location File Or Directory FTP Server in {INSTALL_DIR}/ftp/")
         print("""\033[1m
              [>] Press ENTER to Close Data.
          """)
@@ -199,6 +216,7 @@ def ftp_server():
     else:
         clearScr()
         menu()
+
 
 def ftp_server_configure():
     warning_message("Starting Configuration FTP Server")
@@ -285,7 +303,8 @@ Include /etc/proftpd/conf.d/
     new_user = ServerName
     subprocess.run(["adduser", new_user])
     password = input("Masukkan password FTP server Anda: ")
-    subprocess.run(["chpasswd"], input=f"{new_user}:{password}", encoding="utf-8", shell=True)
+    subprocess.run(
+        ["chpasswd"], input=f"{new_user}:{password}", encoding="utf-8", shell=True)
     subprocess.run(["usermod", "-aG", "sudo", new_user])
     print(f"Pengguna {new_user} berhasil ditambahkan.")
     subprocess.run(["systemctl", "restart", "proftpd"])
@@ -293,6 +312,7 @@ Include /etc/proftpd/conf.d/
     write_ftp_data(ServerName, port, new_user, password)
 
     time.sleep(15)
+
 
 def install_app():
     print(banner + """\033[1m
@@ -316,6 +336,36 @@ def install_app():
     passwordRDS = input("Masukkan Password RDS Anda : ")
     DnsEFS = input("Masukkan DNS EFS Anda : ")
     EFSid = input("Masukkan EFS id  Anda : ")
+
+    # Install Node.js
+    nodejs_setup_command = "curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -"
+    nodejs_install_command = "sudo apt-get install nodejs -y"
+
+    subprocess.call(nodejs_setup_command, shell=True)
+    subprocess.call(nodejs_install_command, shell=True)
+
+    # Install other packages
+    packages_install_command = "sudo apt-get install rsync build-essential git mysql-client binutils -y"
+    subprocess.call(packages_install_command, shell=True)
+
+    # Clone and build efs-utils
+    efs_utils_clone_command = "git clone https://github.com/aws/efs-utils"
+    efs_utils_build_command = "cd efs-utils && ./build-deb.sh"
+    efs_utils_install_command = "sudo apt-get -y install ./efs-utils/build/amazon-efs-utils*deb"
+
+    subprocess.call(efs_utils_clone_command, shell=True)
+    subprocess.call(efs_utils_build_command, shell=True)
+    subprocess.call(efs_utils_install_command, shell=True)
+
+    # Mount EFS
+    efs_mount_command = "sudo mkdir /home/ubuntu/efs"
+    efs_mount_command += f" && sudo mount -t efs -o tls $EFSid:/ /home/ubuntu/efs"
+
+    subprocess.call(efs_mount_command, shell=True)
+
+    # Display disk usage
+    df_command = "df -h"
+    subprocess.call(df_command, shell=True)
 
 
 def menu():
